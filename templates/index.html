@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF 처리 도구</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PDF 처리 도구</h1>
+            <p>PDF 페이지 추출 및 파일 병합</p>
+        </header>
+
+        <!-- 메시지 표시 영역 -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <main>
+            <!-- 페이지 추출 섹션 -->
+            <section class="tool-section">
+                <h2>📄 페이지 추출</h2>
+                <p class="description">PDF 파일에서 원하는 페이지를 추출합니다.</p>
+                
+                <form action="/extract" method="post" enctype="multipart/form-data" class="tool-form">
+                    <div class="form-group">
+                        <label for="file">PDF 파일 선택</label>
+                        <input type="file" id="file" name="file" accept=".pdf" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pages">추출할 페이지 번호</label>
+                        <input type="text" id="pages" name="pages" 
+                               placeholder="예: 1, 3, 5 또는 2-5 또는 1 3-5 10" 
+                               required>
+                        <small class="help-text">쉼표나 공백으로 구분하거나, 범위는 하이픈(-)을 사용하세요</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">페이지 추출</button>
+                </form>
+            </section>
+
+            <!-- 파일 병합 섹션 -->
+            <section class="tool-section">
+                <h2>🔗 파일 병합</h2>
+                <p class="description">여러 개의 PDF 파일을 하나로 병합합니다.</p>
+                
+                <form action="/merge" method="post" enctype="multipart/form-data" class="tool-form">
+                    <div class="form-group">
+                        <label for="files">PDF 파일 선택 (여러 개 가능)</label>
+                        <input type="file" id="files" name="files" accept=".pdf" multiple required>
+                        <small class="help-text">Ctrl(또는 Cmd) 키를 누른 상태로 여러 파일을 선택하세요</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">파일 병합</button>
+                </form>
+            </section>
+        </main>
+
+        <footer>
+            <p>최대 파일 크기: 50MB</p>
+        </footer>
+    </div>
+</body>
+</html>
